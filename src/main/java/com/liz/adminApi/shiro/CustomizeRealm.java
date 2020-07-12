@@ -131,16 +131,15 @@ public class CustomizeRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo( PrincipalCollection principals) {
-		String account = (String) principals.getPrimaryPrincipal();
+		String username = (String) principals.getPrimaryPrincipal();
 
-		logger.info("登陆授权:account=" + account );
-		if (StringUtil.isEmpty(account)){
-			logger.error("登陆授权:失败account=" + account);
+		logger.info("登陆授权:username=" + username );
+		if (StringUtil.isEmpty(username)){
+			logger.error("登陆授权:username=" + username);
 			return null;
 		}
 
-		SysUser user = sysUserService.getByUserName
-				(account);
+		SysUser user = sysUserService.getByUserName(username);
 		if(null == user){
 			logger.error("登陆授权:失败user=null");
 			return null;
@@ -148,11 +147,12 @@ public class CustomizeRealm extends AuthorizingRealm {
 
 
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-//		if(null == companySubaccount.getCompanyRoleId() || companySubaccount.getCompanyRoleId() == 0L){
-//			//主账户拥有该企业的所有权限
-//			info.addStringPermission("*:*");
-//			return info;
-//		}
+		if(AuthorizationUtil.AUTHORIZ_SOVEREIGN_ACCOUNT.contains(user.getUsername())){
+//			特殊账户拥有所有权限
+			info.addStringPermission("*:*");
+			return info;
+		}
+
 		SysUserRole sysUserRole = new SysUserRole();
 		sysUserRole.setUserId(user.getId());
 		List<SysUserRole> sysUserRoleList =  sysUserRoleService.listByProperty(sysUserRole);

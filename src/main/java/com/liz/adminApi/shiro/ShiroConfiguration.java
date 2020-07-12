@@ -126,42 +126,40 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
-        shiroFilterFactoryBean.setLoginUrl("/login/index");
+        shiroFilterFactoryBean.setLoginUrl("/api/login/login");
         shiroFilterFactoryBean.setUnauthorizedUrl("/error/401");
         Map<String,String> map = new HashMap<>();
 
         /* 可以匿名访问的URL */
-        String [] anonList = {"/", "/index", "/login", "/login/index", "/caLogin","/usbKeyCALogin", "/error/*", "/register/*",
-                "/findPassword/*", "/logOut", "/picCode", "/test*", "/fastdfs/*","/help/index","/charge/alipay/notify","/charge/wechat/notify"
-                ,"/js/**","/css/**","/image/**","/*.ico","/error/**"};
+        String [] anonList = {"/", "/index", "/login"};
         for(String anonStr: anonList){
             map.put(anonStr,"anon");
         }
 
         /* 需要登录认证后才能访问的URL */
-        map.put("/archives/**","authc");//档案管理相关
-        map.put("/consume/**","authc");
-        map.put("/gift/**","authc");
-        map.put("/order/**","authc");
-        map.put("/companyAccount/**","authc");
-        map.put("/company/**","authc");
-        map.put("/companySeal/**","authc");
-        map.put("/companyUkeyApply/**","authc");
-        map.put("/companyAccount/**","authc");
-        map.put("/task/**","authc");
+//        map.put("/archives/**","authc");//档案管理相关
+//        map.put("/consume/**","authc");
+//        map.put("/gift/**","authc");
+//        map.put("/order/**","authc");
+//        map.put("/companyAccount/**","authc");
+//        map.put("/company/**","authc");
+//        map.put("/companySeal/**","authc");
+//        map.put("/companyUkeyApply/**","authc");
+//        map.put("/companyAccount/**","authc");
+//        map.put("/task/**","authc");
 
         /* 需要登录认证、相关权限后才能访问的URL */
-        map.put("/sysRole/**","authc,perms");
+//        map.put("/sysRole/**","authc,perms");
 
         /* 子账户对增删改的操作，必须要设置权限才能操作 */
-        map.put("/**/add","authc,perms");
-        map.put("/**/onAdd","authc,perms");
-        map.put("/**/save","authc,perms");
-        map.put("/**/edit","authc,perms");
-        map.put("/**/onEdit","authc,perms");
-        map.put("/**/update","authc,perms");
-        map.put("/**/delete","authc,perms");
-        map.put("/**/batchDelete","authc,perms");
+//        map.put("/**/add","authc,perms");
+//        map.put("/**/onAdd","authc,perms");
+//        map.put("/**/save","authc,perms");
+//        map.put("/**/edit","authc,perms");
+//        map.put("/**/onEdit","authc,perms");
+//        map.put("/**/update","authc,perms");
+//        map.put("/**/delete","authc,perms");
+//        map.put("/**/batchDelete","authc,perms");
 
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);

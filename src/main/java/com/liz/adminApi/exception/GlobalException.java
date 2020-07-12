@@ -12,6 +12,7 @@ import com.liz.adminApi.enums.ResponseCode;
 import com.liz.adminApi.model.ResponseObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,6 +26,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalException {
     private static final Logger log = LogManager.getLogger(GlobalException.class);
+
+    @ExceptionHandler
+    @ResponseBody
+    public ResponseObject ErrorHandler(AuthorizationException e) {
+        log.error("没有通过权限验证！", e);
+        return new ResponseObject(ResponseCode.FORBIDDEN,"没有通过权限验证");
+    }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody

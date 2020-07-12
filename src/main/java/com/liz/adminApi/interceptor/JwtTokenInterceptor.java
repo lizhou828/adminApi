@@ -13,12 +13,14 @@ import com.liz.adminApi.constants.Constant;
 import com.liz.adminApi.enums.ResponseCode;
 import com.liz.adminApi.model.ResponseObject;
 import com.liz.adminApi.service.JedisClientIService;
+import com.liz.adminApi.shiro.AuthorizationUtil;
 import com.liz.adminApi.utils.JwtUtils;
 import com.liz.adminApi.utils.StringUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -27,10 +29,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.security.auth.Subject;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.security.SignatureException;
+import java.text.MessageFormat;
 
 
 /**
@@ -111,7 +117,60 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
             writer.close();
             return false;
         }
+//        boolean canAccessURL = isAccessURL(request,response);
+//        if(!canAccessURL){
+//            //输出对象
+//            PrintWriter writer = response.getWriter();
+//            ResponseObject<String> rest = new ResponseObject(ResponseCode.FORBIDDEN,ResponseCode.FORBIDDEN_MESSAGE);
+//            String responseJson = JSONObject.toJSONString(rest);
+//            //输出error消息
+//            writer.write(responseJson);
+//            writer.close();
+//            return false;
+//        }
         return true;
+    }
+
+    /**
+     * 动态URL过滤
+     * @author hardy<2015年8月3日>
+     * @param request
+     * @param response
+     * @return
+     */
+    private boolean isAccessURL(ServletRequest request, ServletResponse response){
+        String permissionUrl = ((HttpServletRequest)request).getServletPath();
+
+        if(org.apache.commons.lang.StringUtils.isEmpty(permissionUrl))
+            return false;
+
+        // 模块操作(忽略功能模块首页)
+        String permissionMethod = permissionUrl.substring(permissionUrl.lastIndexOf("/")==-1 ? 0 : permissionUrl.lastIndexOf("/")+1).split("\\.")[0];
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(permissionMethod) && permissionMethod.equalsIgnoreCase("index")){
+            return true;
+        }
+        String lower = permissionMethod.toLowerCase();
+        if( lower.contains("list") || lower.contains("query") || lower.contains("search") || lower.contains("find")|| lower.contains("get")  || lower.contains("detail")){
+            return true;//查询的 不做鉴权处理
+        }
+
+
+        // 模块标记
+        String permissionMark = AuthorizationUtil.getMenuCodeByUrl(permissionUrl);
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(permissionMark)){
+            log.debug(MessageFormat.format("Authorization Filter ==> {0}:{1}", permissionMark, permissionMethod));
+            //以“ign”、“ignore”开头的方法名，不做鉴权处理
+            if(permissionMethod.startsWith("ign") || permissionMethod.startsWith("ignore") || org.apache.commons.lang.StringUtils.isEmpty(permissionMethod.trim())){//个别方法名公用的、以“/”结尾的，不做处理
+                log.debug("Authorization Filter ==> Result:Ignore Method");
+                return true;
+            }
+            // 权限校验
+            if (SecurityUtils.getSubject().isPermitted(MessageFormat.format("{0}:{1}", permissionMark, permissionMethod))) {
+                return true;
+            }
+        }
+        log.debug("Authorization Filter==>Result:UnAuthorized");
+        return false;
     }
 
     /**

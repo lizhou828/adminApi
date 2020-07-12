@@ -12,7 +12,7 @@ public class ResponseCode {
 
     public static final int OPERATE_FAIL = 444;
 
-    public static final String NOT_LOGIN_MSG = "未授权";
+    public static final String NOT_LOGIN_MSG = "未认证身份";
 
     public static final int ERROR = 500;
 
@@ -25,4 +25,8 @@ public class ResponseCode {
     public static final String FAIL = "fail";
 
     public static final int SERVICE_UNAVAILABLE = 503;
+
+    public static final int FORBIDDEN = 403;
+
+    public static final String FORBIDDEN_MESSAGE = "未授权";
 }
