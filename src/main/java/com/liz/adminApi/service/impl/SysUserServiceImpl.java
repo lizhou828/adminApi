@@ -23,6 +23,7 @@ import com.liz.adminApi.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -145,5 +146,16 @@ public class SysUserServiceImpl extends GenericService<SysUser, Integer> impleme
     @Override
     public int batchUpdate(List<java.lang.Long> idList, SysUser sysUser) {
         return sysUserMapper.batchUpdate( idList, sysUser);
+    }
+
+    @Override
+    public SysUser getByUserName(String username) {
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(username);
+        List<SysUser>  sysUsers = sysUserMapper.listByProperty(sysUser);
+        if(CollectionUtils.isEmpty(sysUsers ) || sysUsers.size() > 1 ){
+            return null;
+        }
+        return sysUsers.get(0);
     }
 }

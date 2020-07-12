@@ -23,4 +23,6 @@ public class ResponseCode {
     public static final String SUCCESS = "success";
 
     public static final String FAIL = "fail";
+
+    public static final int SERVICE_UNAVAILABLE = 503;
 }

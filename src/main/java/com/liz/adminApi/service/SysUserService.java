@@ -19,4 +19,5 @@ public interface SysUserService extends GenericIService<SysUser,Integer>{
 
         int batchUpdate(List<java.lang.Long> idList, SysUser sysUser);
 
+        SysUser getByUserName(String username);
 }
