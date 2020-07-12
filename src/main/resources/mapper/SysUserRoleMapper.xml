@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.liz.adminApi.mapper.SysUserRoleMapper">
+    <!--<cache type="com.yyw.yhyc.cache.LoggingRedisCache"-->
+           <!--flushInterval="86400000" size="1024000">-->
+    <!--</cache>-->
+    <resultMap id="SysUserRoleResultMapper" type="com.liz.adminApi.model.SysUserRole">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="role_id" property="roleId"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updater_id" property="updaterId"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="drop_state" property="dropState"/>
+    </resultMap>
+
+    <sql id="commonColumns">
+        id,
+        user_id,
+        role_id,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+    <sql id="commonColumnsNotPK">
+        user_id,
+        role_id,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+
+    <sql id="commonProcessDateColumns">
+        id,
+        user_id,
+        role_id,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+    <sql id="commonCondition">
+        <if test="id!= null and id!= ''">
+            AND id = #{id}
+        </if>
+        <if test="userId!= null and userId!= ''">
+            AND user_id = #{userId}
+        </if>
+        <if test="roleId!= null and roleId!= ''">
+            AND role_id = #{roleId}
+        </if>
+        <if test="creatorId!= null and creatorId!= ''">
+            AND creator_id = #{creatorId}
+        </if>
+        <if test="createName!= null and createName!= ''">
+            AND create_name = #{createName}
+        </if>
+        <if test="createTime!= null ">
+            AND create_time = #{createTime}
+        </if>
+        <if test="updaterId!= null and updaterId!= ''">
+            AND updater_id = #{updaterId}
+        </if>
+        <if test="updateName!= null and updateName!= ''">
+            AND update_name = #{updateName}
+        </if>
+        <if test="updateTime!= null ">
+            AND update_time = #{updateTime}
+        </if>
+        <if test="dropState!= null and dropState!= ''">
+            AND drop_state = #{dropState}
+        </if>
+    </sql>
+
+
+    <insert id="save" parameterType="com.liz.adminApi.model.SysUserRole" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[ INSERT INTO sys_user_role ( ]]> <include refid="commonColumnsNotPK"/>
+        <![CDATA[
+                ) VALUES (
+                #{userId},
+                #{roleId},
+                #{creatorId},
+                #{createName},
+                #{createTime},
+                #{updaterId},
+                #{updateName},
+                #{updateTime},
+                #{dropState}
+      ) ]]>
+    </insert>
+
+    <insert id="batchInsert"  parameterType="com.liz.adminApi.model.SysUserRole">
+        insert into sys_user_role( <include refid="commonColumnsNotPK"/> )
+        values
+            <foreach collection="list" item="item" index="index" separator=",">
+                (
+                        #{item.userId},
+                        #{item.roleId},
+                        #{item.creatorId},
+                        #{item.createName},
+                        #{item.createTime},
+                        #{item.updaterId},
+                        #{item.updateName},
+                        #{item.updateTime},
+                        #{item.dropState}
+                )
+            </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.liz.adminApi.model.SysUserRole">
+        <![CDATA[ UPDATE sys_user_role SET
+             id = #{id} ]]>
+            <if test="userId!= null and userId!= ''">
+                , user_id = #{userId}
+            </if>
+            <if test="roleId!= null and roleId!= ''">
+                , role_id = #{roleId}
+            </if>
+            <if test="creatorId!= null and creatorId!= ''">
+                , creator_id = #{creatorId}
+            </if>
+            <if test="createName!= null and createName!= ''">
+                , create_name = #{createName}
+            </if>
+            <if test="createTime!= null ">
+                , create_time = #{createTime}
+            </if>
+            <if test="updaterId!= null and updaterId!= ''">
+                , updater_id = #{updaterId}
+            </if>
+            <if test="updateName!= null and updateName!= ''">
+                , update_name = #{updateName}
+            </if>
+            <if test="updateTime!= null ">
+                , update_time = #{updateTime}
+            </if>
+            <if test="dropState!= null and dropState!= ''">
+                , drop_state = #{dropState}
+            </if>
+      <![CDATA[  WHERE id = #{id} ]]>
+    </update>
+
+    <update id="batchUpdate" parameterType="map">
+          UPDATE  sys_user_role
+          set update_time =  #{sysUserRole.updateTime}
+            <if test="sysUserRole.userId!= null and sysUserRole.userId!= ''">
+                , user_id = #{sysUserRole.userId}
+            </if>
+            <if test="sysUserRole.roleId!= null and sysUserRole.roleId!= ''">
+                , role_id = #{sysUserRole.roleId}
+            </if>
+            <if test="sysUserRole.creatorId!= null and sysUserRole.creatorId!= ''">
+                , creator_id = #{sysUserRole.creatorId}
+            </if>
+            <if test="sysUserRole.createName!= null and sysUserRole.createName!= ''">
+                , create_name = #{sysUserRole.createName}
+            </if>
+            <if test="sysUserRole.createTime!= null ">
+                , create_time = #{sysUserRole.createTime}
+            </if>
+            <if test="sysUserRole.updaterId!= null and sysUserRole.updaterId!= ''">
+                , updater_id = #{sysUserRole.updaterId}
+            </if>
+            <if test="sysUserRole.updateName!= null and sysUserRole.updateName!= ''">
+                , update_name = #{sysUserRole.updateName}
+            </if>
+            <if test="sysUserRole.dropState!= null ">
+                , drop_state = #{sysUserRole.dropState}
+            </if>
+        WHERE
+        <foreach collection="idList" index="index" item="id" open=" id IN(" separator="," close=") ">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteByPK" parameterType="java.lang.Integer">
+        <![CDATA[ DELETE FROM sys_user_role
+        WHERE id = #{id} ]]>
+    </delete>
+
+    <delete id="deleteByPKeys" parameterType="map">
+        DELETE FROM sys_user_role WHERE
+        <foreach collection="primaryKeys" index="index" item="id" open=" id IN(" separator="," close=") ">
+            ${id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="com.liz.adminApi.model.SysUserRole">
+        DELETE FROM sys_user_role WHERE 1 = 1
+        <include refid="commonCondition"/>
+    </delete>
+
+    <select id="getByPK" parameterType="java.lang.Integer" resultMap="SysUserRoleResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM sys_user_role WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="SysUserRoleResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM sys_user_role
+    </select>
+
+    <select id="listByProperty" parameterType="com.liz.adminApi.model.SysUserRole" resultMap="SysUserRoleResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM sys_user_role WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByCount" parameterType="com.liz.adminApi.model.SysUserRole" resultType="int">
+        SELECT count(1) AS totalcount FROM sys_user_role WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByPagination" parameterType="com.liz.adminApi.model.SysUserRole" resultMap="SysUserRoleResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM sys_user_role WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+</mapper>

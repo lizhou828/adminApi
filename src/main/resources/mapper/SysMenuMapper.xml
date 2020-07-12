@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.liz.adminApi.mapper.SysMenuMapper">
+    <!--<cache type="com.yyw.yhyc.cache.LoggingRedisCache"-->
+           <!--flushInterval="86400000" size="1024000">-->
+    <!--</cache>-->
+    <resultMap id="SysMenuResultMapper" type="com.liz.adminApi.model.SysMenu">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="pid" property="pid"/>
+        <result column="order_by" property="orderBy"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updater_id" property="updaterId"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="drop_state" property="dropState"/>
+    </resultMap>
+
+    <sql id="commonColumns">
+        id,
+        name,
+        url,
+        pid,
+        order_by,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+    <sql id="commonColumnsNotPK">
+        name,
+        url,
+        pid,
+        order_by,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+
+    <sql id="commonProcessDateColumns">
+        id,
+        name,
+        url,
+        pid,
+        order_by,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+    <sql id="commonCondition">
+        <if test="id!= null and id!= ''">
+            AND id = #{id}
+        </if>
+        <if test="name!= null and name!= ''">
+            AND name = #{name}
+        </if>
+        <if test="url!= null and url!= ''">
+            AND url = #{url}
+        </if>
+        <if test="pid!= null and pid!= ''">
+            AND pid = #{pid}
+        </if>
+        <if test="orderBy!= null and orderBy!= ''">
+            AND order_by = #{orderBy}
+        </if>
+        <if test="creatorId!= null and creatorId!= ''">
+            AND creator_id = #{creatorId}
+        </if>
+        <if test="createName!= null and createName!= ''">
+            AND create_name = #{createName}
+        </if>
+        <if test="createTime!= null ">
+            AND create_time = #{createTime}
+        </if>
+        <if test="updaterId!= null and updaterId!= ''">
+            AND updater_id = #{updaterId}
+        </if>
+        <if test="updateName!= null and updateName!= ''">
+            AND update_name = #{updateName}
+        </if>
+        <if test="updateTime!= null ">
+            AND update_time = #{updateTime}
+        </if>
+        <if test="dropState!= null and dropState!= ''">
+            AND drop_state = #{dropState}
+        </if>
+    </sql>
+
+
+    <insert id="save" parameterType="com.liz.adminApi.model.SysMenu" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[ INSERT INTO sys_menu ( ]]> <include refid="commonColumnsNotPK"/>
+        <![CDATA[
+                ) VALUES (
+                #{name},
+                #{url},
+                #{pid},
+                #{orderBy},
+                #{creatorId},
+                #{createName},
+                #{createTime},
+                #{updaterId},
+                #{updateName},
+                #{updateTime},
+                #{dropState}
+      ) ]]>
+    </insert>
+
+    <insert id="batchInsert"  parameterType="com.liz.adminApi.model.SysMenu">
+        insert into sys_menu( <include refid="commonColumnsNotPK"/> )
+        values
+            <foreach collection="list" item="item" index="index" separator=",">
+                (
+                        #{item.name},
+                        #{item.url},
+                        #{item.pid},
+                        #{item.orderBy},
+                        #{item.creatorId},
+                        #{item.createName},
+                        #{item.createTime},
+                        #{item.updaterId},
+                        #{item.updateName},
+                        #{item.updateTime},
+                        #{item.dropState}
+                )
+            </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.liz.adminApi.model.SysMenu">
+        <![CDATA[ UPDATE sys_menu SET
+             id = #{id} ]]>
+            <if test="name!= null and name!= ''">
+                , name = #{name}
+            </if>
+            <if test="url!= null and url!= ''">
+                , url = #{url}
+            </if>
+            <if test="pid!= null and pid!= ''">
+                , pid = #{pid}
+            </if>
+            <if test="orderBy!= null and orderBy!= ''">
+                , order_by = #{orderBy}
+            </if>
+            <if test="creatorId!= null and creatorId!= ''">
+                , creator_id = #{creatorId}
+            </if>
+            <if test="createName!= null and createName!= ''">
+                , create_name = #{createName}
+            </if>
+            <if test="createTime!= null ">
+                , create_time = #{createTime}
+            </if>
+            <if test="updaterId!= null and updaterId!= ''">
+                , updater_id = #{updaterId}
+            </if>
+            <if test="updateName!= null and updateName!= ''">
+                , update_name = #{updateName}
+            </if>
+            <if test="updateTime!= null ">
+                , update_time = #{updateTime}
+            </if>
+            <if test="dropState!= null and dropState!= ''">
+                , drop_state = #{dropState}
+            </if>
+      <![CDATA[  WHERE id = #{id} ]]>
+    </update>
+
+    <update id="batchUpdate" parameterType="map">
+          UPDATE  sys_menu
+          set update_time =  #{sysMenu.updateTime}
+            <if test="sysMenu.name!= null and sysMenu.name!= ''">
+                , name = #{sysMenu.name}
+            </if>
+            <if test="sysMenu.url!= null and sysMenu.url!= ''">
+                , url = #{sysMenu.url}
+            </if>
+            <if test="sysMenu.pid!= null and sysMenu.pid!= ''">
+                , pid = #{sysMenu.pid}
+            </if>
+            <if test="sysMenu.orderBy!= null and sysMenu.orderBy!= ''">
+                , order_by = #{sysMenu.orderBy}
+            </if>
+            <if test="sysMenu.creatorId!= null and sysMenu.creatorId!= ''">
+                , creator_id = #{sysMenu.creatorId}
+            </if>
+            <if test="sysMenu.createName!= null and sysMenu.createName!= ''">
+                , create_name = #{sysMenu.createName}
+            </if>
+            <if test="sysMenu.createTime!= null ">
+                , create_time = #{sysMenu.createTime}
+            </if>
+            <if test="sysMenu.updaterId!= null and sysMenu.updaterId!= ''">
+                , updater_id = #{sysMenu.updaterId}
+            </if>
+            <if test="sysMenu.updateName!= null and sysMenu.updateName!= ''">
+                , update_name = #{sysMenu.updateName}
+            </if>
+            <if test="sysMenu.dropState!= null ">
+                , drop_state = #{sysMenu.dropState}
+            </if>
+        WHERE
+        <foreach collection="idList" index="index" item="id" open=" id IN(" separator="," close=") ">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteByPK" parameterType="java.lang.Integer">
+        <![CDATA[ DELETE FROM sys_menu
+        WHERE id = #{id} ]]>
+    </delete>
+
+    <delete id="deleteByPKeys" parameterType="map">
+        DELETE FROM sys_menu WHERE
+        <foreach collection="primaryKeys" index="index" item="id" open=" id IN(" separator="," close=") ">
+            ${id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="com.liz.adminApi.model.SysMenu">
+        DELETE FROM sys_menu WHERE 1 = 1
+        <include refid="commonCondition"/>
+    </delete>
+
+    <select id="getByPK" parameterType="java.lang.Integer" resultMap="SysMenuResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM sys_menu WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="SysMenuResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM sys_menu
+    </select>
+
+    <select id="listByProperty" parameterType="com.liz.adminApi.model.SysMenu" resultMap="SysMenuResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM sys_menu WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByCount" parameterType="com.liz.adminApi.model.SysMenu" resultType="int">
+        SELECT count(1) AS totalcount FROM sys_menu WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByPagination" parameterType="com.liz.adminApi.model.SysMenu" resultMap="SysMenuResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM sys_menu WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+</mapper>

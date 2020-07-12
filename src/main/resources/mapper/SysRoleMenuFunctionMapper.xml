@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.liz.adminApi.mapper.SysRoleMenuFunctionMapper">
+    <!--<cache type="com.yyw.yhyc.cache.LoggingRedisCache"-->
+           <!--flushInterval="86400000" size="1024000">-->
+    <!--</cache>-->
+    <resultMap id="SysRoleMenuFunctionResultMapper" type="com.liz.adminApi.model.SysRoleMenuFunction">
+        <result column="id" property="id"/>
+        <result column="role_id" property="roleId"/>
+        <result column="menu_function_id" property="menuFunctionId"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updater_id" property="updaterId"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="drop_state" property="dropState"/>
+    </resultMap>
+
+    <sql id="commonColumns">
+        id,
+        role_id,
+        menu_function_id,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+    <sql id="commonColumnsNotPK">
+        role_id,
+        menu_function_id,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+
+    <sql id="commonProcessDateColumns">
+        id,
+        role_id,
+        menu_function_id,
+        creator_id,
+        create_name,
+        create_time,
+        updater_id,
+        update_name,
+        update_time,
+        drop_state
+    </sql>
+
+    <sql id="commonCondition">
+        <if test="id!= null and id!= ''">
+            AND id = #{id}
+        </if>
+        <if test="roleId!= null and roleId!= ''">
+            AND role_id = #{roleId}
+        </if>
+        <if test="menuFunctionId!= null and menuFunctionId!= ''">
+            AND menu_function_id = #{menuFunctionId}
+        </if>
+        <if test="creatorId!= null and creatorId!= ''">
+            AND creator_id = #{creatorId}
+        </if>
+        <if test="createName!= null and createName!= ''">
+            AND create_name = #{createName}
+        </if>
+        <if test="createTime!= null ">
+            AND create_time = #{createTime}
+        </if>
+        <if test="updaterId!= null and updaterId!= ''">
+            AND updater_id = #{updaterId}
+        </if>
+        <if test="updateName!= null and updateName!= ''">
+            AND update_name = #{updateName}
+        </if>
+        <if test="updateTime!= null ">
+            AND update_time = #{updateTime}
+        </if>
+        <if test="dropState!= null and dropState!= ''">
+            AND drop_state = #{dropState}
+        </if>
+    </sql>
+
+
+    <insert id="save" parameterType="com.liz.adminApi.model.SysRoleMenuFunction" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[ INSERT INTO sys_role_menu_function ( ]]> <include refid="commonColumnsNotPK"/>
+        <![CDATA[
+                ) VALUES (
+                #{roleId},
+                #{menuFunctionId},
+                #{creatorId},
+                #{createName},
+                #{createTime},
+                #{updaterId},
+                #{updateName},
+                #{updateTime},
+                #{dropState}
+      ) ]]>
+    </insert>
+
+    <insert id="batchInsert"  parameterType="com.liz.adminApi.model.SysRoleMenuFunction">
+        insert into sys_role_menu_function( <include refid="commonColumnsNotPK"/> )
+        values
+            <foreach collection="list" item="item" index="index" separator=",">
+                (
+                        #{item.roleId},
+                        #{item.menuFunctionId},
+                        #{item.creatorId},
+                        #{item.createName},
+                        #{item.createTime},
+                        #{item.updaterId},
+                        #{item.updateName},
+                        #{item.updateTime},
+                        #{item.dropState}
+                )
+            </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.liz.adminApi.model.SysRoleMenuFunction">
+        <![CDATA[ UPDATE sys_role_menu_function SET
+             id = #{id} ]]>
+            <if test="roleId!= null and roleId!= ''">
+                , role_id = #{roleId}
+            </if>
+            <if test="menuFunctionId!= null and menuFunctionId!= ''">
+                , menu_function_id = #{menuFunctionId}
+            </if>
+            <if test="creatorId!= null and creatorId!= ''">
+                , creator_id = #{creatorId}
+            </if>
+            <if test="createName!= null and createName!= ''">
+                , create_name = #{createName}
+            </if>
+            <if test="createTime!= null ">
+                , create_time = #{createTime}
+            </if>
+            <if test="updaterId!= null and updaterId!= ''">
+                , updater_id = #{updaterId}
+            </if>
+            <if test="updateName!= null and updateName!= ''">
+                , update_name = #{updateName}
+            </if>
+            <if test="updateTime!= null ">
+                , update_time = #{updateTime}
+            </if>
+            <if test="dropState!= null and dropState!= ''">
+                , drop_state = #{dropState}
+            </if>
+      <![CDATA[  WHERE id = #{id} ]]>
+    </update>
+
+    <update id="batchUpdate" parameterType="map">
+          UPDATE  sys_role_menu_function
+          set update_time =  #{sysRoleMenuFunction.updateTime}
+            <if test="sysRoleMenuFunction.roleId!= null and sysRoleMenuFunction.roleId!= ''">
+                , role_id = #{sysRoleMenuFunction.roleId}
+            </if>
+            <if test="sysRoleMenuFunction.menuFunctionId!= null and sysRoleMenuFunction.menuFunctionId!= ''">
+                , menu_function_id = #{sysRoleMenuFunction.menuFunctionId}
+            </if>
+            <if test="sysRoleMenuFunction.creatorId!= null and sysRoleMenuFunction.creatorId!= ''">
+                , creator_id = #{sysRoleMenuFunction.creatorId}
+            </if>
+            <if test="sysRoleMenuFunction.createName!= null and sysRoleMenuFunction.createName!= ''">
+                , create_name = #{sysRoleMenuFunction.createName}
+            </if>
+            <if test="sysRoleMenuFunction.createTime!= null ">
+                , create_time = #{sysRoleMenuFunction.createTime}
+            </if>
+            <if test="sysRoleMenuFunction.updaterId!= null and sysRoleMenuFunction.updaterId!= ''">
+                , updater_id = #{sysRoleMenuFunction.updaterId}
+            </if>
+            <if test="sysRoleMenuFunction.updateName!= null and sysRoleMenuFunction.updateName!= ''">
+                , update_name = #{sysRoleMenuFunction.updateName}
+            </if>
+            <if test="sysRoleMenuFunction.dropState!= null ">
+                , drop_state = #{sysRoleMenuFunction.dropState}
+            </if>
+        WHERE
+        <foreach collection="idList" index="index" item="id" open=" id IN(" separator="," close=") ">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteByPK" parameterType="java.lang.Integer">
+        <![CDATA[ DELETE FROM sys_role_menu_function
+        WHERE id = #{id} ]]>
+    </delete>
+
+    <delete id="deleteByPKeys" parameterType="map">
+        DELETE FROM sys_role_menu_function WHERE
+        <foreach collection="primaryKeys" index="index" item="id" open=" id IN(" separator="," close=") ">
+            ${id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="com.liz.adminApi.model.SysRoleMenuFunction">
+        DELETE FROM sys_role_menu_function WHERE 1 = 1
+        <include refid="commonCondition"/>
+    </delete>
+
+    <select id="getByPK" parameterType="java.lang.Integer" resultMap="SysRoleMenuFunctionResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM sys_role_menu_function WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="SysRoleMenuFunctionResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM sys_role_menu_function
+    </select>
+
+    <select id="listByProperty" parameterType="com.liz.adminApi.model.SysRoleMenuFunction" resultMap="SysRoleMenuFunctionResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM sys_role_menu_function WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByCount" parameterType="com.liz.adminApi.model.SysRoleMenuFunction" resultType="int">
+        SELECT count(1) AS totalcount FROM sys_role_menu_function WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByPagination" parameterType="com.liz.adminApi.model.SysRoleMenuFunction" resultMap="SysRoleMenuFunctionResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM sys_role_menu_function WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+</mapper>
